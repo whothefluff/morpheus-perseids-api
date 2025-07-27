@@ -1,6 +1,10 @@
+# This is docker-compose.archive.yml
+# It runs the entire application from the pre-built, saved images.
+
 services:
   web:
-    build: .
+    # 'build: .' is removed and replaced by the 'image:' line below.
+    image: my-morpheus-app:preserved
     command: rerun --background 'ruby app.rb'
     volumes:
       - .:/app
