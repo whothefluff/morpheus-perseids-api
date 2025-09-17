@@ -1,83 +1,48 @@
 # Morpheus Perseids API
 
-Morpheus Perseids API provides an API interface for the
-[Morpheus Perseids](https://github.com/perseids-tools/morpheus-perseids)
-version of the Morpheus morphological parsing tool.
+This project provides a Dockerized API interface for the [Alatius' version](https://github.com/whothefluff/morpheus-alatius-xml) of the Morpheus morphological parsing tool. It is an adapted fork of the original [Morpheus Perseids API](https://github.com/perseids-tools/morpheus-perseids-api).
 
-It takes Ancient Greek or Latin text as input and then lemmatizes the text
-and performs a morphological analysis.
+It takes Ancient Greek or Latin text as input and then lemmatizes the text and performs a morphological analysis.
 
-## Running
+## Running with Docker (Recommended)
 
-### Docker Compose
+The recommended way to run this project is with Docker and Docker Compose. This handles all dependencies and provides a consistent environment.
 
-#### Running a standalone server
+### 1. Prerequisites
 
-```
-docker-compose build
-docker-compose up
-```
+- A working installation of **Docker**.
+- A working installation of **Docker Compose**
 
-#### Including in other compose files
+### 2. Configuration
 
-Include `perseidsproject/morpheus-perseids-api` as one of your services in `docker-compose.yml`.
-The simplest version would be:
+All project configuration is managed through a `.env` file.
+You can open the `.env` file to customize which base Morpheus image to use or what local ports to expose. For a first run, the default settings are fine.
 
-```yaml
-version: '3'
-services:
-  morph:
-    image: perseidsproject/morpheus-perseids-api:latest
-    ports:
-      - "1500:1500"
-```
+### 3. Build and Run the Application
 
-The port can be customized using the environment variable `PORT` and the application
-can be configured to use Redis caching by setting `REDIS_ENABLED` to `true`.
-The Redis URL is configured using `REDIS_URL`.
-For example, the configuration to run on port 3000 and with Redis is:
-
-```yaml
-version: '3'
-services:
-  morph:
-    image: perseidsproject/morpheus-perseids-api:latest
-    environment:
-      - PORT=3000
-      - REDIS_ENABLED=true
-      - REDIS_URL=redis://redis:6379
-    ports:
-      - "3000:3000"
-  redis:
-    image: redis:5.0.8
-    ports:
-     - "6379:6379"
-```
-
-
-(See project on [Docker Hub](https://hub.docker.com/r/perseidsproject/morpheus-perseids-api/).)
-
-#### Caching
-
-The [docker-compose.yml](./docker-compose.yml) file in the root directory provides an example
-of a setup using both Redis and Nginx caching.
-
-### Unix/Linux
-
-Requirements:
-
-- Ruby (~3.0)
-- Bundler
+Run the following command from the project's root directory:
 
 ```bash
-bundle install
-
-MORPHLIB=/path/to/stemlib EXECUTABLE=/path/to/morpheus bundle exec ruby app.rb
+# This command builds the API image if it doesn't exist,
+# and then starts all services (web, redis, cache) in the background.
+docker compose up --build -d
 ```
+
+Your application stack is now running!
+*   The web service is available at **`http://localhost:1500`**.
+*   The Nginx cache is available at **`http://localhost:1501`**.
+
+The default `docker-compose.yml` provides a complete stack using both Redis and Nginx for caching.
+
+### 4. Creating a Distributable Archive
+
+After building the image, you can package it into a self-contained `.tar` archive for others to use. See the **[Archived Project Restoration Guide](./README.archive.md)** for instructions on how to use the archive.
+
+---
 
 ## Usage
 
-See [BAMBOO.md](./docs/BAMBOO.md) and [RAW.md](./docs/RAW.md).
+The API provides endpoints for analyzing words. See [BAMBOO.md](./docs/BAMBOO.md) and [RAW.md](./docs/RAW.md) for more documentation.
 
 ### Examples
 
@@ -294,4 +259,24 @@ See [BAMBOO.md](./docs/BAMBOO.md) and [RAW.md](./docs/RAW.md).
     }
   }
 }
+```
+
+---
+
+## Alternative: Running Natively (Advanced)
+
+It is also possible to run the application natively on a Unix/Linux system, but this is not recommended as it requires manual dependency management.
+
+**Requirements:**
+- Ruby (~3.0)
+- Bundler
+- A compiled `morpheus` executable on your `$PATH`
+- The Morpheus `stemlib` directory
+
+**Installation & Execution:**
+```bash
+bundle install
+
+# You must provide the path to your stemlib directory
+MORPHLIB=/path/to/stemlib bundle exec ruby app.rb
 ```

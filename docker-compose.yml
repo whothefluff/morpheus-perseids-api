@@ -1,6 +1,10 @@
 services:
   web:
-    build: .
+    build:
+      context: .
+      args:
+        MORPHEUS_IMAGE: ${MORPHEUS_IMAGE}
+    image: ${FINAL_API_IMAGE} # Override default name
     command: rerun --background 'ruby app.rb'
     volumes:
       - .:/app
