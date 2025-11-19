@@ -20,7 +20,7 @@ Clone this repository to your local machine.
 
 The Docker images are stored externally to keep this repository small.
 
-1.  **[Download `docker_images_v1_1.rar` from Google Drive](https://drive.google.com/file/d/1vl9BOTWzCgAoB1PTJFwPGCEbxm1QCstj/view)**.
+1.  **[Download `docker_images_v1_1_1.rar` from Google Drive](https://drive.google.com/file/d/1ByTTKs5MUhGMcvdBU6FjBgIAjPPJwkdX/view)**.
 2.  Extract the `.rar` file into the root of this project directory.
 
 After extracting, you should have a `docker_images/` directory containing three `.tar` files.
@@ -31,7 +31,7 @@ Run the following commands in your terminal to load the images from the `.tar` f
 
 ```bash
 # Load the main application image
-docker load < docker_images/morpheus-alatius-api-v1.tar
+docker load < docker_images/morpheus-alatius-api-v1.0.1.tar
 
 # Load the Redis database image
 docker load < docker_images/redis-5.0.8.tar
@@ -40,7 +40,7 @@ docker load < docker_images/redis-5.0.8.tar
 docker load < docker_images/nginx-1.17.9.tar
 ```
 
-After running these commands, you can verify the images were loaded successfully by running `docker images`. You should see `whothefluff/morpheus-alatius-api:v1.0.0`, `redis:5.0.8`, and `nginx:1.17.9` in the list.
+After running these commands, you can verify the images were loaded successfully by running `docker images`. You should see `whothefluff/morpheus-alatius-api:v1.0.1`, `redis:5.0.8`, and `nginx:1.17.9` in the list.
 
 ### Step 4: Configure Your Environment
 
@@ -69,14 +69,14 @@ Example: `http://localhost:1501/analysis/word?lang=lat&engine=morpheuslat&word=a
 
 The following instructions are for developers who want to rebuild the main API image from source, for example, after updating the base Morpheus XML image. This workflow uses `docker-compose.yml` and the `Dockerfile`.
 
-**1. Build the New Image**
+### Step 1: Build the New Image
 
 This command reads the `Dockerfile` and builds the new API image, tagging it with the name specified in `FINAL_API_IMAGE` from your `.env` file.
 ```bash
 docker compose build
 ```
 
-**2. Test the New Build (Optional)**
+### Step 2: Test the New Build (Optional)
 
 To run and test the version you just built, use the standard `up` command.
 ```bash
@@ -84,15 +84,16 @@ docker compose up -d
 ```
 You can then stop it with `docker compose down`.
 
-**3. Package the New Image for Distribution**
+### Step 3: Package the New Image for Distribution
 
-Once you are satisfied with your build, save the new image to a `.tar` file. This is the file you would distribute to end-users (and the one that is already shared in the `.rar` file as `morpheus-alatius-api-v1.tar`).
+Once you are satisfied with your build, save the new image to a `.tar` file. This is the file you would distribute to end-users (and the one that is already shared in the `.rar` file as `morpheus-alatius-api-v1.0.1.tar`).
 
 *   **Option A: Save the image defined in your `.env` file (Recommended)**
     This command automatically reads the `FINAL_API_IMAGE` variable from your `.env` file and saves the corresponding image.
     ```bash
-    grep FINAL_API_IMAGE .env | cut -d '=' -f 2 | tr -d '\r' | xargs -I {} docker save -o docker_images/morpheus-alatius-api-v1.tar {}
+    grep FINAL_API_IMAGE .env | cut -d '=' -f 2 | tr -d '\r' | xargs -I {} docker save -o docker_images/morpheus-alatius-api-v1.0.1.tar {}
     ```
+    Assuming you created a `docker_images` folder in the root directory
 
 *   **Option B: Save an image by manually specifying name/location**
     If you want to save the final image somewhat differently you can always just run a simple `docker save` command

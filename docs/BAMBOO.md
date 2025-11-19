@@ -321,11 +321,12 @@ These API endpoints are based on the Project Bamboo
 The `/analysis/word` route returns the morphology of a Greek or Latin word.
 It requires the following parameters:
 
-| Paramter | Allowed values               |
-| -------- | ---------------------------- |
-| lang     | `grc`, `lat`, `la`           |
-| engine   | `morpheusgrc`, `morpheuslat` |
-| word     | Any Greek or Latin word      |
+| Paramter   | Allowed values                      |
+| --------   | ----------------------------        |
+| lang       | `grc`, `lat`, `la`                  |
+| engine     | `morpheusgrc`, `morpheuslat`        |
+| word       | Any Greek or Latin word             |
+| strictCase | `0` for off (default) or `1` for on |
 
 The route accepts a `GET` request with query string parameters
 or a `POST` request with parameters in the request body (content type `application/x-www-form-urlencoded`).
@@ -337,8 +338,8 @@ If a request is made with an `Accept` header that includes `application/xml`, th
 
 ### Other routes and parameters
 
-There is also an `/engine` route and a `strictCase` parameter.
-These were implemented to be fully backwards-compatible with the
+There is also an `/engine` route parameter.
+It was implemented to be fully backwards-compatible with the
 [Morphsvc](https://github.com/perseids-project/morphsvc) repository.
-They are intentionally not documented and should not be relied on;
-they may be removed in future versions.
+It's intentionally not documented and should not be relied on;
+it may be removed in future versions.
