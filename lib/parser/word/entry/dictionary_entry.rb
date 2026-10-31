@@ -1,6 +1,7 @@
 require_relative '../../utils'
 
 require_relative './dictionary_entry/headword'
+require_relative './dictionary_entry/sublemma'
 require_relative './dictionary_entry/part_of_speech'
 require_relative './dictionary_entry/declension'
 require_relative './dictionary_entry/gender'
@@ -14,6 +15,8 @@ class Parser
             case element.name
             when 'hdwd'
               @headword = Headword.new(element)
+            when 'sublemma'
+              @sublemma = Sublemma.new(element)
             when 'pofs'
               @part_of_speech = PartOfSpeech.new(element)
             when 'decl'
@@ -36,10 +39,10 @@ class Parser
 
         private
 
-        attr_reader :headword, :part_of_speech, :declension, :gender
+        attr_reader :headword, :sublemma, :part_of_speech, :declension, :gender
 
         def components
-          [headword, part_of_speech, declension, gender].compact
+          [headword, sublemma, part_of_speech, declension, gender].compact
         end
       end
     end
